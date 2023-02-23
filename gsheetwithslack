@@ -20,16 +20,16 @@ function onAddNewRow(e) {
     if (isFilled) {
       var message = "New row added:\n";
       
-      message += headers[0]+" : "+rowValues[0]+"\n";
-      message += headers[3]+" : "+rowValues[3]+"\n";
-      message += headers[4]+" : "+rowValues[4]+"\n";
-      message += headers[8]+" : "+rowValues[8]+ ` <@${slackmention}>`+ "\n";
-      message += headers[20]+" : "+rowValues[20]+"\n";
-      message += headers[22]+" : "+rowValues[22]+"\n";
+      // Enter the indices of whichever specific row and data you want to push to slack
+      
+      message += headers[x]+" : "+rowValues[x]+"\n";
+      message += headers[x]+" : "+rowValues[x]+"\n";
+      message += headers[x]+" : "+rowValues[x]+ ` <@${slackmention}>`+ "\n"; 
+     
   
       
       Logger.log(message);
-      //Browser.msgBox(message);
+    
       var data = {
           "text":message
       }
