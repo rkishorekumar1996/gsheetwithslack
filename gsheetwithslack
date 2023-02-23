@@ -1,0 +1,74 @@
+function onAddNewRow(e) {
+  const range = e.range;
+  const sheet = range.getSheet();
+  const rows = range.getNumRows();
+  const lastColumn = sheet.getLastColumn();
+  const columnCount = xx; // Specify the number of columns
+ 
+ Logger.log("Started");
+
+  for (let i = 1; i <= rows; i++) {
+
+    const row = range.offset(i - 1, 0, 1, lastColumn);
+    const rowValues = row.getValues()[0];
+    const isFilled = rowValues.slice(0, columnCount).every(value => value !== "");
+    const headers = sheet.getRange(1,1,1,columnCount).getValues()[0];
+
+    var slackmention = fetchMemberId(rowValues[x]); // Pass the email address from the specific row index
+
+   
+    if (isFilled) {
+      var message = "New row added:\n";
+      
+      message += headers[0]+" : "+rowValues[0]+"\n";
+      message += headers[3]+" : "+rowValues[3]+"\n";
+      message += headers[4]+" : "+rowValues[4]+"\n";
+      message += headers[8]+" : "+rowValues[8]+ ` <@${slackmention}>`+ "\n";
+      message += headers[20]+" : "+rowValues[20]+"\n";
+      message += headers[22]+" : "+rowValues[22]+"\n";
+  
+      
+      Logger.log(message);
+      //Browser.msgBox(message);
+      var data = {
+          "text":message
+      }
+
+      var options = {
+      'method' : 'POST',
+      "headers": {
+        "Content-Type":"application/json"
+      },
+      'payload' : JSON.stringify(data)
+      };
+      UrlFetchApp.fetch("Enter the slack webhook URL", options);
+    
+    }
+  }
+
+  Logger.log("Ended");
+}
+
+function fetchMemberId(emailaddress) {
+  var formData ={
+    "email": emailaddress
+  }
+  var options = {
+    "method" : "POST",
+    "headers": {
+      "Authorization": "Bearer Bot-token", // the bot-token must have users:read and users:read.email scopes
+    },
+    "payload" : formData
+  };
+   
+  var response = UrlFetchApp.fetch("https://slack.com/api/users.lookupByEmail", options);
+  var dataSet = JSON.parse(response.getContentText());
+  if (dataSet.user) {
+    var memberID = dataSet.user.id;
+    return memberID;
+    Logger.log(memberID);
+  } else {
+    // handle the case where dataSet.user is undefined
+    return null;
+  }
+}
